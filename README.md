@@ -41,34 +41,31 @@ http://scholarbank.nus.edu.sg/handle/10635/30289
 DisBatch Documentation
 -----------------------
 
-1. Version:
+<b>1. Version</b>
 -------------------------------------
 DisBatch Version 0.02.
 Please report all bugs/fixes to jean--at--bic.nus.edu.sg
 
 
-2. Hardware & Software Requirements:
--------------------------------------
-
-2a. Operating System
+<b>2a. Operating System</b>
 -----------------
 The local version of DisBatch is a command line tool containing Perl and Unix shell scripts zipped in a tar.gz file. 
 The software will run on most versions of Linux, Unix and Mac OS X (with lynx and seq installed).
 
-2b. Dependencies 
+<b>2b. Dependencies</b> 
 ----------------
 These software packages must be installed before running DisBatch
 * Perl [http://www.perl.com]
 * R [http://www.r-project.org]
 
-3. Installation Instructions:
+<b>3. Installation Instructions:</b>
 -------------------------------
 
 * Unzip DisBatch-0.02.tar.gz : tar -xvf DisBatch-0.02.tar.gz
 * You are now ready to run the DisBatch software!
 
 
-4. Run DisBatch:
+<b>4. Run DisBatch:</b>
 -------------------------------
 - Use the following command: disbatch <inputfilename> <timeout(mins)>
 - Example: disbatch test.fasta 10
@@ -78,7 +75,7 @@ These software packages must be installed before running DisBatch
   nohup disbatch <inputfilename> <timeout>&
   and check the status using ps -ef | grep
 
-5. Output Files
+<b>5. Output Files</b>
 -------------------------------
 A number of output files will be generated:
 
@@ -108,7 +105,7 @@ Intermediate output files (will be cleaned up after a complete run)
 * <filename>.p2, <filename>.p3 : Intermediate PrDOS output files
 
 ---------------------------
-Sample output file:
+<b>Sample output file:</b>
 ---------------------------
 x1,y1,z1
 x2,y2,z2
