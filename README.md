@@ -32,7 +32,7 @@ GeneSilico MetaDisorder MD2, but with more than 10x speedup. The DisBatch metapr
 was available both as a web service and as a local software package.
 </p>
 <p>
-NFkB Base was part of my MSc research on understanding the functional roles of intrinsic protein disorder in NFkB Transcription factors. A copy of my Msc thesis can be downloaded from: 
+Disbatch was part of my MSc research on understanding the functional roles of intrinsic protein disorder in NFkB Transcription factors. A copy of my Msc thesis can be downloaded from: 
 http://scholarbank.nus.edu.sg/handle/10635/30289
 
 </p>
