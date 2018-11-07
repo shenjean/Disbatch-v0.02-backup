@@ -1,0 +1,5 @@
+/var/www/cgi-bin/predict/GetFold $1.seq >$1.f 
+/var/www/cgi-bin/predict/convert2.pl $1 | grep -v "^$" >$1.f2
+/var/www/cgi-bin/predict/transpose.pl $1.f2 | grep -v "^$" | perl -pe "s/(\d+),-,/0,/g" | 
+perl -pe "s/(\d+),-(\d).(\d+),/1,/g" | sed 's/,$//' >$1.f3
+

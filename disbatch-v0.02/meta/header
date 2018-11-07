@@ -1,0 +1,22 @@
+<link href="http://bioslax01.bic.nus.edu.sg/meta/style.css" rel="stylesheet" type="text/css">
+<body bgcolor=#FFFFFF>
+<table width=80% align=center border=0px cellspacing=0px cellpadding=5px class="text">
+<tr>
+<td align=left bgcolor=#666666> 
+<font class="header">DisBatch :: Batch Disorder Meta-Predictor ::</font>
+</td>
+</tr>
+<tr><td class=button>
+<a href="http://bioslax01.bic.nus.edu.sg/meta/index.php">Home</a>
+&nbsp; &nbsp;
+<a href="http://bioslax01.bic.nus.edu.sg/meta/help.php">Help</a>
+&nbsp; &nbsp;
+<a href="http://bioslax01.bic.nus.edu.sg/meta/contact.php">Contact</a>
+&nbsp; &nbsp;
+<a href="http://bioslax01.bic.nus.edu.sg/meta/download.php">Download</a>
+&nbsp; &nbsp;&nbsp; :: &nbsp; &nbsp; &nbsp; 
+Version: 0.02
+&nbsp; &nbsp;&nbsp; :: &nbsp; &nbsp; &nbsp; 
+Last Update: 13 May 2011</td></tr>
+<tr><td><PRE>
+

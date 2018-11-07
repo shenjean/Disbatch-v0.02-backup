@@ -1,0 +1,5 @@
+while read seq
+do
+echo "m=xml&sq=$seq" | lynx -accept_all_cookies -get_data -source http://bioportal.weizmann.ac.il/fldbin/findex
+done<$1  
+

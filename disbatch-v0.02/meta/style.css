@@ -1,0 +1,51 @@
+a:link {
+	color: #000000;
+	text-decoration: underline;
+}
+
+a:visited {
+	color: #000000;
+	text-decoration: underline;
+}
+
+a:hover {
+	color: #666666;
+	text-decoration: underline;
+}
+
+.text {
+	font-family: Calibri, Arial, sans-serif;
+	font-size: 14px;
+}
+
+.button {
+        font-family: Calibri, Arial, sans-serif;
+        font-size: 13px;
+        background-color: #EEECEC;
+        text-align:left;
+}
+
+.header {
+	font-family: Calibri, Arial, sans-serif;
+	font-size: 24px;
+	color: #FFFFFF;
+}
+
+hr {
+
+	height:3px;
+	border:1px;
+	color: #CCCCCC;
+	background-color: #CCCCCC;
+	width: 99%;
+
+}
+
+
+
+
+
+
+
+
+

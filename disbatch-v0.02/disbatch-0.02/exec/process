@@ -1,0 +1,33 @@
+line=`grep -e "<HTML><HEAD><META" $1.p`
+
+
+if test -n "$line"
+then
+cat << ERROR
+-------------------------------------------------------------
+ERROR: Error processing PrDOS output - the output is not ready"
+Try using a higher timeout value"
+Due to this error, only FoldIndex output: $1.foldindex.csv is generated"
+--------------------------------------------------------------------
+TIP: You can try re-running exec/pr.download <timeout> <fastafilename> to download the results
+and complete the Meta-Prediction.
+--------------------------------------------------------------------
+ERROR
+
+mv $1.f3 $1.foldindex.csv
+rm $1.f2
+exit
+fi
+
+
+sed 's/^1,/#,/g' $1.p | awk -F , '{print $1,$4}' | sed 's/^[0-9]* //g' | tr '\n' ',' | \
+tr '#' '\n' | sed 's/ //g' | grep -v "^$" | sed 's/,,$//g' >$1.p2
+
+exec/pad $1.f3 $1 | grep -v "^$" >$1.f4
+exec/t3 $1.f4 >$1.foldindex.csv
+
+exec/pad $1.p2 $1 | grep -v "^$" >$1.p3
+exec/t3 $1.p3 >$1.prdos.csv
+exec/average $1
+
+

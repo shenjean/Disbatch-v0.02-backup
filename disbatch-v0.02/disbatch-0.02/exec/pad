@@ -1,0 +1,31 @@
+#Get max number of fields from data file
+f=`awk -F "," '{ print NF }' $2.f3 | sort -n | tail -1`
+p=`awk -F "," '{ print NF }' $2.p2 | sort -n | tail -1`
+
+if [ $f -le $p ]
+then
+cols=$p
+fi
+
+if [ $f -gt $p ]
+then
+cols=$f
+fi
+
+line=`wc -l $1 | awk '{print $1}'`
+
+for i in `seq $line`
+do
+x=`sed -n $i\p $1`
+c=`sed -n $i\p $1 | tr -dc ',' | wc -c`
+n=$((c+1))
+
+echo -n $x
+
+while [ $n -lt $cols ]
+do
+echo -n ",NA"  
+n=$((n+1))
+done 
+echo -e "\n"
+done

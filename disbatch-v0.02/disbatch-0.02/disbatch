@@ -1,0 +1,81 @@
+echo "-----------------------------------------------"
+echo "Thank you for using DisBatch!"
+echo "Please report bugs/fixes to jean--at--bic.nus.edu.sg"
+echo "Please read the full documentation at README"
+echo "-----------------------------------------------"
+
+if test ! -s "$1"
+then
+echo "Usage: disbatch <inputfilename> <timeout(mins)>"
+echo "Example: disbatch test.fasta 10"
+echo "-----------------------------------------------"
+echo "ERROR: Input file \"$1\" does not exist or is empty!"
+exit
+fi
+
+if test ! -n "$2"
+then
+echo "ERROR: Timeout value empty. Please enter timeout (in minutes) for each sequence."
+exit
+fi
+
+time=$2
+
+no=`cat $1 | tr -dc '>' | wc -c`
+
+if [ $no = 0 ]
+then 
+echo "ERROR: There is a problem with your input sequence(s)."
+echo "Please check that all sequence(s) are submitted correctly in FASTA format."
+exit
+fi
+ 
+echo "----------------------------"
+echo "Converting sequence file..."
+echo "---------------------------"
+exec/getseq $1 
+echo "Done."
+
+
+echo "------------------------------------------"
+echo "Submitting sequence(s) to PrDOS Remotely.."
+
+exec/GetP $1.seq | tee $1.prlog.txt 2>>/dev/null
+
+n=$((no * time))
+
+echo "Done"
+echo "------------------------------------------"
+echo "Submitting sequence(s) to FoldIndex..."
+echo "-----------------------------------------"
+
+exec/RunFoldIndex $1 2>>$1.error.f
+
+if test -s $1.error.f
+then
+echo "ERROR: There is a problem retrieving your results from FoldIndex."
+echo "Error log:"
+cat $1.error.f
+echo "Please try again."
+exit
+
+else 
+rm -rf $1.error.f
+fi
+
+
+cat <<SUBMIT
+
+Done.
+----------------------
+You have $no sequences.
+The timeout set is $time minutes/per sequence.
+Please wait for $n minutes before we retrieve your PrDOS results ...
+A file $1.csv will be generated in this folder once done.
+
+SUBMIT
+
+exec/pr.download $n $1
+
+
+

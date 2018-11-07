@@ -1,0 +1,116 @@
+#!/bin/bash
+# how to handle cleanup for aborted jobs. /tmp/$$ still remains
+# write cron to clean /tmp/$$ and /var/www/htdocs/T3SEdb/tmp/predict$$.png regularly
+
+eval "`proccgi $*`"
+echo "Content-type: text/html"
+echo ""
+no=`echo $FORM_seq | tr -dc '>' | wc -c`
+time=`echo $FORM_timeout`
+
+echo "<HTML><HEAD><title>DisBatch: Submitting Prediction...</title><PRE>"
+`cat /var/www/htdocs/meta/header`
+
+if [ $no -gt 50 ]
+then
+echo "<b>ERROR:</b><br>You have more than 50 sequences!<br>"
+echo "Please reduce the number of sequences to be submitted.<br>" 
+echo "Alternatively, you can download the local version for large scale analysis."
+exit
+fi
+
+if [ $no = 0 ]
+then 
+echo "<b>ERROR:</b><br>"
+echo "There is a problem with your input sequence(s)."
+echo "<br>Please check that all sequence(s) are submitted correctly in FASTA format."
+exit
+fi
+ 
+pid=$$
+mkdir /tmp/$pid
+echo "<b>Your Job ID:$pid</b>"
+echo "----------------------"
+echo "Submitting the following sequence(s):" 
+
+cd /tmp/$pid
+echo "$FORM_seq" >input.fasta
+
+echo $FORM_seq | fold -100
+
+
+echo "<br>$no sequences submitted. Done."
+echo "----------------------------"
+echo "Converting sequence file..."
+echo "---------------------------"
+/var/www/cgi-bin/predict/getseq input.fasta 
+
+echo "Done."
+echo "----------------------"
+echo "Submitting sequence(s) to PrDOS Remotely.."
+
+/var/www/cgi-bin/predict/GetP input.fasta.seq | tee input.fasta.prlog.txt 2>>/dev/null 
+
+n=$((no * time))
+
+echo "Done"
+echo "------------------------------------------"
+echo "Submitting sequence(s) to FoldIndex..."
+echo "-----------------------------------------"
+
+/var/www/cgi-bin/predict/RunFoldIndex input.fasta 2>>input.fasta.error.f
+
+if test -s input.fasta.error.f
+then
+echo "ERROR: There is a problem retrieving your results from FoldIndex."
+echo "Error log:"
+cat input.fasta.error.f  
+echo "Please try again."
+exit
+
+else
+rm -rf input.fasta.error.f
+fi
+
+p=`wc -l input.fasta.prlog.txt | awk '{print $1}'` 
+s=`wc -l input.fasta.prlog.seq | awk '{print $1}'`  
+
+if [ $p -lt $s ] 
+then
+
+cat << ERROR
+<b>
+ERROR: Error submitting sequence(s) to PrDOS.
+There is no response from the server.
+Please try again.
+Due to this error, only FoldIndex output: "input.fasta.foldindex.csv" will be generated
+Other output files will be blank.
+</b>
+ERROR
+
+mv $2.f3 $2.foldindex.csv
+rm -rf $2.f2
+
+else
+nohup /var/www/cgi-bin/predict/pr.download $n input.fasta& 
+fi
+
+cat <<SUBMIT
+
+Done.
+----------------------
+You have $no sequences.
+The timeout set is $time minutes/per sequence.
+Please wait for $n minutes before we retrieve your PrDOS results ...
+
+<hr>
+
+<b>Submission successful!</b>
+----------------------
+You can check your latest prediction status by clicking on the button below:
+<form method=GET action='/cgi-bin/predict/status'>
+<input type=hidden name=pid value=$pid />
+<input type=submit value='Check Prediction Status' />
+</form>
+
+SUBMIT

@@ -1,0 +1,106 @@
+#!/bin/bash
+# how to handle cleanup for aborted jobs. /tmp/$$ still remains
+# write cron to clean /tmp/$$ and /var/www/htdocs/T3SEdb/tmp/predict$$.png regularly
+
+eval "`proccgi $*`"
+echo "Content-type: text/html"
+echo ""
+no=`echo $FORM_seq | tr -dc '>' | wc -c`
+time=`echo $FORM_timeout`
+
+echo "<HTML><HEAD><title>Submitting Prediction...</title><PRE>"
+`cat /var/www/htdocs/meta/header`
+
+if [ $no -gt 50 ]
+then
+echo "<b>ERROR:</b><br>You have more than 50 sequences!<br>"
+echo "Please reduce the number of sequences to be submitted.<br>" 
+echo "Alternatively, you can download the local version for large scale analysis."
+exit
+fi
+
+if [ $no = 0 ]
+then 
+echo "<b>ERROR:</b><br>"
+echo "There is a problem with your input sequence(s)."
+echo "<br>Please check that all sequence(s) are submitted correctly in FASTA format."
+exit
+fi
+ 
+pid=$$
+mkdir /tmp/$pid
+echo "<b>Your Job ID:$pid</b>"
+echo "----------------------"
+echo "Submitting the following sequence(s):" 
+
+cd /tmp/$pid
+echo "$FORM_seq" >input.fasta
+
+echo $FORM_seq | fold -100
+
+
+echo "<br>$no sequences submitted. Done."
+echo "----------------------"
+echo "Running DisEMBL REM465 Predictor Locally.."
+/var/www/cgi-bin/predict/run.dis 
+
+if test -s error.d
+then
+echo "<br><b>ERROR:</b>"
+echo "There is a problem running DisEMBL with your input sequence(s)."
+echo "Please check that all sequence(s) are in FASTA format."
+echo "<br><b>Error log:</b>"
+cat error.d
+echo "<br><b>Please try again.</b>"
+exit
+fi
+
+echo "Done."
+echo "----------------------"
+echo "Submitting sequence(s) to PrDOS Remotely.."
+echo "[WARNING: This may take some time if you have large number of sequences!]"
+
+/var/www/cgi-bin/predict/getseq 2>error.p
+/var/www/cgi-bin/predict/pr.pl 2>>error.p
+
+if test -s error.p
+then
+echo "<br><b>ERROR:</b>"
+echo "There is a problem submitting your input sequence(s) to PrDOS."
+echo "<br><b>Error log:</b>"
+cat error.d
+echo "<br><b>Please try again.</b>"
+exit
+fi
+
+
+n=$((no * time))
+
+nohup /var/www/cgi-bin/predict/pr.download $n& 
+
+cat <<SUBMIT
+
+Done.
+----------------------
+You have $no sequences.
+The timeout set is $time minutes/per sequence.
+Please wait for $n minutes before we retrieve your PrDOS results ...
+
+<hr>
+
+<b>Submission successful!</b>
+
+You can download your results ($n minutes) later at: \
+<a href=http://bioslax01.bic.nus.edu.sg/meta/output/$pid.csv>\ 
+http://bioslax01.bic.nus.edu.sg/meta/output/$pid.csv</a>
+
+Please bookmark this link and check back later.
+Thank you for using our server!
+----------------------
+You can also check your latest prediction status by clicking on the button below:
+<form method=GET action='/cgi-bin/predict/status'>
+<input type=hidden name=pid value=$pid />
+<input type=submit value='Check Prediction Status' />
+</form>
+
+SUBMIT

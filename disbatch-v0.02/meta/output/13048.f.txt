@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE data [
+<!ELEMENT data (findex,numresidues,charge,phobic,segments)>
+<!ELEMENT findex (#PCDATA)>
+<!ELEMENT numresidues (#PCDATA)>
+<!ELEMENT charge (#PCDATA)>
+<!ELEMENT phobic (#PCDATA)>
+<!ELEMENT segments (segment+)>
+<!ATTLIST segments num CDATA #IMPLIED>
+<!ELEMENT segment (#PCDATA)>
+<!ATTLIST segment start CDATA #IMPLIED>
+<!ATTLIST segment end CDATA #IMPLIED>
+<!ATTLIST segment len CDATA #IMPLIED>
+<!ATTLIST segment score CDATA #IMPLIED>
+]>
+<data>
+<findex>-0.440381388888889</findex>
+<numresidues>9</numresidues>
+<charge>0.111111111111111</charge>
+<phobic>0.295055555555556</phobic>
+<segments num="1">
+<segment start="1" end="9" len="9" score="-0.440381388888889" std="" />
+
+</segments>
+</data><?xml version="1.0"?>
+<!DOCTYPE data [
+<!ELEMENT data (findex,numresidues,charge,phobic,segments)>
+<!ELEMENT findex (#PCDATA)>
+<!ELEMENT numresidues (#PCDATA)>
+<!ELEMENT charge (#PCDATA)>
+<!ELEMENT phobic (#PCDATA)>
+<!ELEMENT segments (segment+)>
+<!ATTLIST segments num CDATA #IMPLIED>
+<!ELEMENT segment (#PCDATA)>
+<!ATTLIST segment start CDATA #IMPLIED>
+<!ATTLIST segment end CDATA #IMPLIED>
+<!ATTLIST segment len CDATA #IMPLIED>
+<!ATTLIST segment score CDATA #IMPLIED>
+]>
+<data>
+<findex>0.0547606666666667</findex>
+<numresidues>9</numresidues>
+<charge>0.111111111111111</charge>
+<phobic>0.472844444444444</phobic>
+<segments num="">
+
+</segments>
+</data>

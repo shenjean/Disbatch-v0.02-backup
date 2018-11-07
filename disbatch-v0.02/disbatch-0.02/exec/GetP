@@ -1,0 +1,6 @@
+while read seq
+do
+echo "sequence=$seq&fprate=+5.0" |lynx -accept_all_cookies -post_data http://prdos.hgc.jp/cgi-bin/prediction.cgi | 
+grep -m 1 "result.cgi?ppid=" | perl -pe 's/^(.+)ppid=//' 2>/dev/null
+done<$1 
+

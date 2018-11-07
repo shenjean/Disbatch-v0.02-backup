@@ -1,0 +1,27 @@
+line=`grep -e "<HTML><HEAD><META" $1.p`
+
+
+if test -n "$line"
+then
+echo "-------------------------------------------------------------"
+echo "ERROR: Error processing PrDOS output - the output is not ready"
+echo "Try using a higher timeout value"
+echo "Due to this error, only FoldIndex output: $1.f.txt is generated"
+mv $1.f $1.f.txt
+rm $1.f2
+exit
+fi
+
+
+sed 's/^1,/#,/g' $1.p | awk -F , '{print $1,$4}' | sed 's/^[0-9]* //g' | tr '\n' ',' | \
+tr '#' '\n' | sed 's/ //g' | grep -v "^$" | sed 's/,,$//g' >$1.p2
+
+/var/www/cgi-bin/predict/pad $1.f3 $1 | grep -v "^$" >$1.f4
+/var/www/cgi-bin/predict/t3 $1.f4 >$1.foldindex.csv
+
+/var/www/cgi-bin/predict/pad $1.p2 $1 | grep -v "^$" >$1.p3
+/var/www/cgi-bin/predict/t3 $1.p3 >$1.prdos.csv
+/var/www/cgi-bin/predict/average $1
+
+mv $1.f $1.f.txt
+mv $1.p $1.p.txt

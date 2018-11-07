@@ -1,0 +1,75 @@
+#!/bin/bash
+eval "`proccgi $*`"
+echo "Content-type: text/html"
+echo ""
+pid=`echo $FORM_pid` 
+
+
+if test ! -s "/tmp/$pid/input.fasta.f.txt"
+
+then
+cat <<RUN
+<HTML><HEAD><title>DisBatch: Prediction still running..</title>
+<meta http-equiv="refresh" content="5"></HEAD>
+`cat /var/www/htdocs/meta/header`
+
+Prediction still running....
+This page will refresh every (5) seconds until prediction is complete.
+You can also bookmark this page and check back later.
+
+RUN
+
+else
+
+cat /tmp/$pid/input.fasta.results.csv >/var/www/htdocs/meta/output/$pid.results.csv          
+cat /tmp/$pid/input.fasta.binary.csv >/var/www/htdocs/meta/output/$pid.binary.csv          
+cat /tmp/$pid/input.fasta.f.txt >/var/www/htdocs/meta/output/$pid.f.txt          
+cat /tmp/$pid/input.fasta.p.txt >/var/www/htdocs/meta/output/$pid.p.txt 
+
+cat <<STAT
+
+<HTML><HEAD><title>DisBatch: Prediction Completed!</title></HEAD>
+`cat /var/www/htdocs/meta/header`
+
+<b>Prediction Completed! Thank you for using our server.</b>
+
+<font color="#666666">`cat /tmp/$pid/input*error*`</font>
+</pre>
+
+<p><br>
+You can download your results from the links below: 
+<p>
+<ul>
+<li>Summed prediction scores (FoldIndex + PrDOS): \
+<a href=../../meta/output/$pid.results.csv>Download</a>
+<br><font color=#666666>
+DisBatch Meta-Prediction output file with raw scores
+<br>(Sum of DisEMBL probability score + PrDOS binary score at each position; min=0, max=2)
+<br><b>* Recommended Threshold : 1.5 *</b>
+</font>
+<p>
+<li>Summed prediction votes (FoldIndex + PrDOS): \
+<a href=../../meta/output/$pid.binary.csv>Download</a>
+<br><font color=#666666>
+Summed prediction scores of DisBatch, converted to number of votes based on PrDOS threshold of 0.5
+<br>(No. of disorder votes from DisEMBL and PrDOS at each position; min=0, max=2)
+<br><b>* Recommended Threshold : 2 * </b>
+</font>
+<p><p>
+<li>FoldIndex prediction scores: \
+<a href=../../meta/output/$pid.f.txt>Download</a>
+<br><font color=#666666>
+FoldIndex raw output file
+</font>
+<p>
+<li>PrDOS prediction scores: \
+<a href=../../meta/output/$pid.p.txt>Download</a>
+<br><font color=#666666>
+PrDOS raw output file (min=0, max=1)
+</ul>
+<hr>
+<pre><b>
+Need <a href=../../meta/help.php>help</a> reading the output file?
+STAT
+
+fi

@@ -1,0 +1,5 @@
+/root/DisEMBL-1.4/DisEMBL.py 8 8 4 1.2 1.4 1.2 input.fasta scores >input.d 2>error.d
+sed 's/\s/,/g' input.d | awk -F , '{print $3'} | 
+grep -e "COILS" -e "\." | tr '\n' ' ' |
+sed 's/COILS/\nCOILS/g' | sed 's/\s/,/g' |
+sed 's/COILS,//g' | grep -v ^$ | sed 's/,$//g' >input.d2 2>>error.d 

@@ -1,0 +1,38 @@
+<b>Help: Output File Format</b>
+<font class="text">
+A number of output files will be generated:
+
+<u>I. Output from DisBatch Meta-Predictor:</u> 
+<li><b>filename.results.csv</b> : DisBatch Meta-Prediction output file with raw scores 
+<font color=#666666>(Sum of DisEMBL probability score + PrDOS binary score at each position; min=0, max=2) 
+<b>* Recommended Threshold : 1.5 * </b></font>
+
+<li><b>filename.binary.csv</b> : Summed prediction scores of DisBatch, converted to number of votes based on PrDOS threshold of 0.5
+<font color=#666666>(No. of disorder votes from DisEMBL and PrDOS at each position; min=0, max=2) 
+<b>* Recommended Threshold : 2 * </b></font>
+<br>
+<u>II. Output from primary methods - FoldIndex and PrDOS:</u>
+<li><b>filename.f.txt</b> : Original prediction output for FoldIndex 
+<li><b>filename.p.txt</b> : Original prediction scores for PrDOS 
+
+<hr>
+---------------------------
+Sample output file:
+---------------------------
+x1,y1,z1
+x2,y2,z2
+x3,y3,z3
+---------------------------
+
+<b>Output is in CSV format, where column -> sequence and row -> position:</b>
+
+<li>Each column is separated by a comma (,) and contains prediction status of  each sequence (in the exact order of the input FASTA file).
+<li>Each row contains the prediction score/status in all input sequences at each position.
+<li>NA represent blank or null values which are not predicted by the predictor(s). For example,
+
+<b>For example,</b>
+    * x1, x2, x3 represent the disorder prediction score/status for sequence x (1st sequence in your input) 
+    * y1, y2, y3 represent the disorder prediction score/status for sequence y (2nd sequence in your input) 
+    at positions 1, 2 and 3 respectively. etc. 
+
+</td></tr>

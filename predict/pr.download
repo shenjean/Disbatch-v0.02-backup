@@ -1,0 +1,26 @@
+sleep $1\m
+
+while read id
+do
+echo "format=csv&ppid=$id" |lynx -accept_all_cookies -get_data http://prdos.hgc.jp/cgi-bin/download.cgi
+done<$2.prlog.txt >$2.p 2>$2.error.p
+
+if test  -s $2.error.p
+then
+cat << ERROR
+Error downloading results from PrDOS.
+There is no response from the server.
+Please try again.
+Due to this error, only FoldIndex output: $2.f.txt will be generated
+Error Log:
+ERROR
+cat $2.error.p
+mv $2.f $2.f.txt
+rm -rf $2.f2
+exit
+else
+rm -rf $2.error.p
+/var/www/cgi-bin/predict/process $2
+fi
+    
+
